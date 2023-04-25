@@ -1,17 +1,17 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails"
+require 'rails'
 # Pick the frameworks you want:
-require "active_model/railtie"
-require "active_job/railtie"
-require "active_record/railtie"
-require "active_storage/engine"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_mailbox/engine"
-require "action_text/engine"
-require "action_view/railtie"
-require "action_cable/engine"
+require 'active_model/railtie'
+require 'active_job/railtie'
+require 'active_record/railtie'
+require 'active_storage/engine'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'action_mailbox/engine'
+require 'action_text/engine'
+require 'action_view/railtie'
+require 'action_cable/engine'
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -29,11 +29,20 @@ module Pfm
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    config.eager_load_paths << Rails.root.join('extras')
+    config.eager_load_paths += %W[#{config.root}/app/lib]
+    config.eager_load_paths += %W[#{config.root}/lib]
 
+    config.lograge.enabled        = true
+    config.lograge.custom_options = lambda do |event|
+      { host: {},
+        params: event.payload }
+    end
+    config.lograge.formatter      = Lograge::Formatters::Logstash.new
+    config.lograge.logger         = LogStashLogger.new(type: :udp, host: 'localhost', port: 5228)
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    config.api_only               = true
   end
 end
