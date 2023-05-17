@@ -11,10 +11,10 @@ class ImporterJob < ApplicationJob
                 )
                 .except('id', 'extra')
 
-      next if Account.where(se_id: account['se_id']).exists?
+      db_account   = Account.find_by(se_id: account['se_id'])
+      db_account ||= Account.create!(account)
 
       ActiveRecord::Base.transaction do
-        db_account      = Account.create!(account)
         se_transactions = TransactionsRequest
                           .new
                           .get(db_account.connection_id, db_account.se_id)['data']

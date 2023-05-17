@@ -25,6 +25,6 @@ Rails.application.routes.draw do
       get :search
     end
 
-    resources :budget, only: %i[create show]
+    resources :budget, only: %i[create show index destroy]
   end
 end

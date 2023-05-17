@@ -1,17 +1,14 @@
 class ConnectRequest < BaseRequest
-  base_uri "#{base_uri}/connect_sessions"
-
   def connect(params)
     self.class.post(
-      '/create',
+      '/connect_sessions/create',
       body: params
     )
   end
 
   def refresh(params)
-    self.class.post(
-      '/refresh',
-      body: params
+    self.class.put(
+      "/connections/#{params[:connection_id]}/refresh"
     )
   end
 end

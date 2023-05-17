@@ -1,12 +1,4 @@
 FactoryBot.define do
-  # factory :api_key do
-  #   name       { "test" }
-  #   key_type   { ApiKey::APP }
-  #   status     { ApiKey::ACTIVE }
-  #   public_key { File.open("#{Rails.root}/config/test_public.pem", "r").read }
-  #   client_id  { 123 }
-  #   application_id { client.try(:default_application).try(:id) }
-  # end
   factory :user do
     name { 'Name' }
     email { 'test@test.com' }

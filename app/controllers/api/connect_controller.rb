@@ -1,7 +1,7 @@
 class Api::ConnectController < Api::BaseController
   def connect
     response   = ConnectRequest.new.connect(connect_params)
-    pp response
+
     return invalid_return_to unless response['data'].present?
 
     render json: response['data']
@@ -14,9 +14,12 @@ class Api::ConnectController < Api::BaseController
   end
 
   def refresh
-    response   = ConnectRequest.new.refresh(refresh_params)
-    pp response
-    render json: response['data']
+    connection_ids = Account.where(user_id: current_user.id).pluck(:connection_id).uniq
+    connection_ids.each do |connection_id|
+      response = ConnectRequest.new.refresh(connection_id:)
+      pp response
+    end
+    head 200
   end
 
   private
@@ -58,9 +61,7 @@ class Api::ConnectController < Api::BaseController
 
   def refresh_params
     {
-      data: {
-        connection_id: params[:connection_id]
-      }
+      connection_id: params[:connection_id]
     }
   end
 end
